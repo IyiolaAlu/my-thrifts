@@ -29,7 +29,7 @@ export default function Navbar() {
     const deleteCartItem = useCartStore((state) => state.removeFromCart)
     const updateQuantity = useCartStore((state) => state.updateCartQuantity)
 
-const pathName = usePathname()
+    const pathName = usePathname()
     useEffect(() => {
         if (!isPending && session) {
             getCart()
@@ -59,11 +59,15 @@ const pathName = usePathname()
                                 <DropdownMenuContent>
                                     <DropdownMenuGroup>
                                         <DropdownMenuLabel></DropdownMenuLabel>
-                                        <DropdownMenuItem  className={pathName === "/" ? "bg-black font-bold text-white" : "text-gray-500"}>
+                                        <DropdownMenuItem className={pathName === "/" ? "bg-black font-bold text-white" : "text-gray-500"}>
                                             <Link href="/">Home</Link>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem className={pathName === "/dashboard" ? "bg-black font-bold text-white" : "text-gray-500"}>
-                                            <Link href="/dashboard">Dashboard</Link>
+                                            {
+                                                session?.user?.role === "admin" && (
+                                                    <Link href="/dashboard" className={pathName === "/dashboard" ? "bg-black font-bold text-white p-0.5 rounded" : "text-gray-500"}>Dashboard</Link>
+                                                )
+                                            }
                                         </DropdownMenuItem>
                                         <DropdownMenuItem className={pathName === "/products" ? "bg-black font-bold text-white" : "text-gray-500"}>
                                             <Link href="/products">Collections</Link>
@@ -80,9 +84,13 @@ const pathName = usePathname()
                         <h1 className="font-bold text-3xl">StyleWears</h1>
                     </div>
                     <div className="hidden md:flex md:gap-3">
-                        <Link href="/" className={pathName === "/" ? "bg-black font-bold text-white p-0.5 rounded" : "text-gray-500"}>Home</Link>
-                        <Link href="/products" className={pathName === "/products" ? "bg-black font-bold text-white p-0.5 rounded" : "text-gray-500"}>Collections</Link>
-                        <Link href="/dashboard" className={pathName === "/dashboard" ? "bg-black font-bold text-white p-0.5 rounded" : "text-gray-500"}>Dashboard</Link>
+                        <Link href="/" className={pathName === "/" ? "bg-black font-bold text-white px-2 rounded" : "text-gray-500"}>Home</Link>
+                        <Link href="/products" className={pathName === "/products" ? "bg-black font-bold text-white px-2 rounded" : "text-gray-500"}>Collections</Link>
+                        {
+                            session?.user?.role === "admin" && (
+                                <Link href="/dashboard" className={pathName === "/dashboard" ? "bg-black font-bold text-white px-2 rounded" : "text-gray-500"}>Dashboard</Link>
+                            )
+                        }
                     </div>
                     {
                         isPending ? (
@@ -90,7 +98,7 @@ const pathName = usePathname()
                             </>
                         ) : (
                             <div className="flex gap-2 items-center">
-                                
+
                                 {
 
                                     !session && (
@@ -104,45 +112,45 @@ const pathName = usePathname()
                                 {
                                     session && (
                                         <>
-                                    <Sheet >
-                                    <SheetTrigger render={<Button variant="outline">
-                                        <div className="relative">
-                                            <ShoppingCart />
-                                            {cart.length > 0 && (
-                                                <span className="absolute -top-4 -right-4 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                                    {cart.length}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </Button>} />
-                                    <SheetContent className="overflow-scroll z-100">
-                                        <SheetHeader>
-                                            <SheetTitle>Your Favourite Items</SheetTitle>
-                                            {/* <SheetDescription>
+                                            <Sheet >
+                                                <SheetTrigger render={<Button variant="outline">
+                                                    <div className="relative">
+                                                        <ShoppingCart />
+                                                        {cart.length > 0 && (
+                                                            <span className="absolute -top-4 -right-4 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                                {cart.length}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </Button>} />
+                                                <SheetContent className="overflow-scroll z-100">
+                                                    <SheetHeader>
+                                                        <SheetTitle>Your Favourite Items</SheetTitle>
+                                                        {/* <SheetDescription>
                                                             Make changes to your profile here. Click save when you&apos;re done.
                                                         </SheetDescription> */}
-                                        </SheetHeader>
-                                        <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                                            {
-                                                cart.map((item) => (
-                                                    <CartCard
-                                                        _id={item._id}
-                                                        key={item._id}
-                                                        productId={item.productId}
-                                                        quantity={item.quantity}
-                                                        onDecrease={() => decQuantity(item._id, item.quantity)}
-                                                        onIncrease={() => incQuantity(item._id, item.quantity)}
-                                                        onDelete={() => deleteCartItem(item._id)}
-                                                    />
-                                                ))
-                                            }
-                                        </div>
-                                        <SheetFooter>
-                                            <Button type="submit">Checkout</Button>
-                                            <SheetClose render={<Button variant="outline">Close</Button>} />
-                                        </SheetFooter>
-                                    </SheetContent>
-                                </Sheet>
+                                                    </SheetHeader>
+                                                    <div className="grid flex-1 auto-rows-min gap-6 px-4">
+                                                        {
+                                                            cart.map((item) => (
+                                                                <CartCard
+                                                                    _id={item._id}
+                                                                    key={item._id}
+                                                                    productId={item.productId}
+                                                                    quantity={item.quantity}
+                                                                    onDecrease={() => decQuantity(item._id, item.quantity)}
+                                                                    onIncrease={() => incQuantity(item._id, item.quantity)}
+                                                                    onDelete={() => deleteCartItem(item._id)}
+                                                                />
+                                                            ))
+                                                        }
+                                                    </div>
+                                                    <SheetFooter>
+                                                        <Button type="submit">Checkout</Button>
+                                                        <SheetClose render={<Button variant="outline">Close</Button>} />
+                                                    </SheetFooter>
+                                                </SheetContent>
+                                            </Sheet>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Avatar>
