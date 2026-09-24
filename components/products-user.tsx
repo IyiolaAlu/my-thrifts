@@ -8,17 +8,28 @@ import { HomeCardProps } from "./home-card";
 import { Input } from "@base-ui/react";
 import { Label } from "./ui/label";
 import { Search } from "lucide-react";
+import { ProductSkeleton } from "./productShimmer";
 
 export default function ProductsUserPage() {
     const [products, setProducts] = useState<ProductCardProps[]>([])
     const [search, setSearch] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
     async function fetchProducts() {
-        const res = await axios.get("/api/products")
-        if (!res.data) {
-            alert("No data found")
-        } else {
-            setProducts(res.data)
+        setLoading(true)
+        try {
+            const res = await axios.get("/api/products")
+            if (!res.data) {
+                alert("No data found")
+            } else {
+                setProducts(res.data)
+            }
+        } catch (error) {
+            console.log(error);
+
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -31,7 +42,7 @@ export default function ProductsUserPage() {
     const addToCart = useCartStore((state) => state.addToCart)
 
     const searchTerm = search.trim().toLowerCase()
-    const filteredProduct = products.filter((item)=>{
+    const filteredProduct = products.filter((item) => {
         return item.category?.includes(searchTerm)
     })
 
@@ -39,14 +50,20 @@ export default function ProductsUserPage() {
         <>
             <div className="flex justify-center">
                 <div className="relative flex justify-center items-center py-32 w-fit ">
-                <Label className="absolute left-2" htmlFor="search"><Search /></Label>
-                <span className="absolute right-5">search</span>
-                <Input  value={search} onChange={(e)=>setSearch(e.target.value)} id="search" type="text" className="w-60 h-11 md:w-91.75 md:h-12.5 bg-[#D9D9D9] pl-12" />
-            </div>
+                    <Label className="absolute left-2" htmlFor="search"><Search /></Label>
+                    <span className="absolute right-5">search</span>
+                    <Input value={search} onChange={(e) => setSearch(e.target.value)} id="search" type="text" className="w-60 h-11 md:w-91.75 md:h-12.5 bg-[#D9D9D9] pl-12" />
+                </div>
             </div>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
                 {
-                    filteredProduct.map((item) => (
+                    loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                                <ProductSkeleton key={i} />
+                            ))}
+                        </div>
+                    ) : filteredProduct.map((item) => (
                         <HomeCardProps
                             _id={item._id}
                             key={item._id}

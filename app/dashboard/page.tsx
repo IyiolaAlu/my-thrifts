@@ -3,6 +3,7 @@ import CartPage from "@/components/cart-sheet";
 import EditProductDialogPage from "@/components/edit-product-dialog";
 import { CardImage } from "@/components/product-card";
 import ProductForm from "@/components/product-form"
+import { ProductSkeleton } from "@/components/productShimmer";
 import { GetCartTypes, ProductTypes } from "@/lib/models/model-types";
 import { useCartStore } from "@/lib/store/useCartStore";
 import axios from "axios";
@@ -64,12 +65,18 @@ export default function DashboardPage() {
         <>
             <div className=" min-h-dvh mx-auto p-5 max-w-7xl">
                 <div className="py-32 max-w-md w-full ">
-                    <ProductForm onProductCreated={(newProduct)=>
-                        setProducts((prev)=>[...prev, newProduct])
-                    }/>
+                    <ProductForm onProductCreated={(newProduct) =>
+                        setProducts((prev) => [...prev, newProduct])
+                    } />
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
-                    {products.map((product: ProductTypes) => (
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                                <ProductSkeleton key={i} />
+                            ))}
+                        </div>
+                    ) : products.map((product: ProductTypes) => (
                         <CardImage
                             key={product._id}
                             _id={product._id}
