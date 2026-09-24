@@ -21,12 +21,13 @@ export default function ProductsUserPage() {
         try {
             const res = await axios.get("/api/products")
             if (!res.data) {
-                alert("No data found")
+                setError("No data found")
             } else {
                 setProducts(res.data)
             }
         } catch (error) {
-            console.log(error);
+           console.error(error);
+           
 
         } finally {
             setLoading(false)
@@ -55,14 +56,17 @@ export default function ProductsUserPage() {
                     <Input value={search} onChange={(e) => setSearch(e.target.value)} id="search" type="text" className="w-60 h-11 md:w-91.75 md:h-12.5 bg-[#D9D9D9] pl-12" />
                 </div>
             </div>
+            {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
                 {
                     loading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        
+                           <>
                             {Array.from({ length: 8 }).map((_, i) => (
                                 <ProductSkeleton key={i} />
                             ))}
-                        </div>
+                           </>
+                      
                     ) : filteredProduct.map((item) => (
                         <HomeCardProps
                             _id={item._id}

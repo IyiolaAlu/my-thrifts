@@ -29,7 +29,8 @@ export default function DashboardPage() {
             }
 
         } catch (error) {
-            setError("no product found")
+            console.error(error);
+            
         } finally {
             setLoading(false)
         }
@@ -69,13 +70,14 @@ export default function DashboardPage() {
                         setProducts((prev) => [...prev, newProduct])
                     } />
                 </div>
+                {error && <p className="text-red-500 text-center">{error}</p>}
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
                     {loading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <>
                             {Array.from({ length: 8 }).map((_, i) => (
                                 <ProductSkeleton key={i} />
                             ))}
-                        </div>
+                           </>
                     ) : products.map((product: ProductTypes) => (
                         <CardImage
                             key={product._id}
