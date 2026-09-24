@@ -6,6 +6,7 @@ import { useCommentStore } from "@/lib/store/useCommentStore"
 import { useEffect, useState } from "react";
 import { ProductDetailsTypes } from "@/lib/models/model-types";
 import { formatPrice } from "@/lib/utils/format";
+import { useSession } from "@/lib/auth/auth-client";
 
 interface ProductDetailsProps {
     product: ProductDetailsTypes
@@ -19,6 +20,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     const allComments = [...(product.comments || []), ...storeComments]
 
+    const {data: session} = useSession()
 
 
     return (
@@ -34,10 +36,17 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                             className="relative  w-full aspect-square object-cover  "
 
                         />
+                       {session && (
                         <div className="grid w-full gap-2">
                             <Textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Type your message here." />
-                            <Button onClick={() => addToComment(product._id, comment)}>{loading ? "Sending Comment..." : "Comment"}</Button>
+                            <Button disabled={loading} onClick={() => addToComment(product._id, comment)}>{loading ? "Sending Comment..." : "Comment"}</Button>
                         </div>
+                       )}
+                       {!session && (
+                        <div className="grid w-full gap-2 text-center">
+                            <p className="text-sm text-gray-600">Login or create an account to make a comment</p>
+                        </div>
+                       )}
                     </div>
                     <div className="border border-[#D9D9D9] w-75 flex flex-col p-10 items-center gap-4">
                         <div>
