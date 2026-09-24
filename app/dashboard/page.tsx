@@ -3,7 +3,6 @@ import CartPage from "@/components/cart-sheet";
 import EditProductDialogPage from "@/components/edit-product-dialog";
 import { CardImage } from "@/components/product-card";
 import ProductForm from "@/components/product-form"
-import { ProductSkeleton } from "@/components/productShimmer";
 import { GetCartTypes, ProductTypes } from "@/lib/models/model-types";
 import { useCartStore } from "@/lib/store/useCartStore";
 import axios from "axios";
@@ -74,9 +73,7 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6">
                     {loading ? (
                         <>
-                            {Array.from({ length: 8 }).map((_, i) => (
-                                <ProductSkeleton key={i} />
-                            ))}
+                           <div className="animate-spin h-8 w-8 border-4 border-gray-300 border-t-black rounded-full" />
                            </>
                     ) : products.map((product: ProductTypes) => (
                         <CardImage

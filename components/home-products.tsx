@@ -13,26 +13,36 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { UserProductsCard } from "@/components/user-products-card";
 import { useCartStore } from "@/lib/store/useCartStore";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ProductTypes } from "@/lib/models/model-types";
 import { HomeCardProps } from "./home-card";
+import { ProductSkeleton } from "./productShimmer";
 
 export default function HomeProducts() {
   const plugin = React.useMemo(
     () => Autoplay({ delay: 2000, stopOnInteraction: true }),
     []
   )
-
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
   const [products, setProducts] = useState<ProductTypes[]>([])
   async function fetchProducts() {
-    const res = await axios.get("/api/products")
+    setLoading(true)
+    try {
+      const res = await axios.get("/api/products")
     if (!res.data) {
-      return alert("No products found")
+      setError("No data found")
     } else
       setProducts(res.data)
+    } catch (error) {
+      console.error(error);
+      
+    }finally{
+      setLoading(false)
+    }
+      
   }
 
   useEffect(() => {
@@ -55,7 +65,7 @@ export default function HomeProducts() {
             <p>WOMEN</p>
             <p>KIDS</p>
 
-            
+
           </div>
         </div>
 
@@ -110,18 +120,25 @@ export default function HomeProducts() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {
-              newProducts.map((product) => (
-                <HomeCardProps
-                  _id={product._id}
-                  key={product._id}
-                  image={product.image}
-                  category={product.category}
-                  price={product.price}
-                  description={product.description}
-                  title={product.title}
-                  onAddToCart={() => addToCart(product._id, 1)}
-                />
-              ))
+              loading ? (
+                <>
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <ProductSkeleton key={i} />
+                  ))}
+                </>
+              ) :
+                newProducts.map((product) => (
+                  <HomeCardProps
+                    _id={product._id}
+                    key={product._id}
+                    image={product.image}
+                    category={product.category}
+                    price={product.price}
+                    description={product.description}
+                    title={product.title}
+                    onAddToCart={() => addToCart(product._id, 1)}
+                  />
+                ))
             }
           </div>
         </div>

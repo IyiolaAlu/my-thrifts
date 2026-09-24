@@ -11,9 +11,10 @@ import { Search } from "lucide-react";
 import { ProductSkeleton } from "./productShimmer";
 
 export default function ProductsUserPage() {
+     const [loading, setLoading] = useState(false)
     const [products, setProducts] = useState<ProductCardProps[]>([])
     const [search, setSearch] = useState("")
-    const [loading, setLoading] = useState(false)
+   
     const [error, setError] = useState("")
 
     async function fetchProducts() {
