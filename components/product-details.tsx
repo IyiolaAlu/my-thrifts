@@ -26,7 +26,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     return (
         <>
             <div className="container max-w-7xl mx-auto p-5 flex justify-center">
-                <div className="flex flex-col gap-5 w-100 md:flex-row md:gap-10 md:w-200">
+                <div className="flex flex-col items-center gap-5 w-100 md:flex-row md:gap-10 md:w-200">
                     <div className="flex flex-col gap-5 justify-between">
                         <Image
                             src={product.image}
