@@ -52,7 +52,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
                         <div className="border-t w-full" />
                         <p className="font-bold">COMMENTS</p>
-                        <div className=" overflow-y-scroll flex-1">
+                        <div className=" overflow-y-scroll h-20">
                             <div className="overflow-y-auto flex-1 space-y-3 pr-1">
                                 {allComments.map((comment, key) => (
                                     <div key={key} className="flex items-start gap-3">    

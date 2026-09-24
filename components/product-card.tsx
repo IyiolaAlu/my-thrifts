@@ -35,8 +35,8 @@ export function CardImage({ _id, image, title, description, price, category, onD
       <Image
         loading="eager"
         src={image}
-        width={300}
-        height={300}
+        width={600}
+        height={600}
         alt={title}
         className="relative  aspect-square w-full object-cover h-auto " />
       </Link>
